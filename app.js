@@ -1,41 +1,97 @@
-var createError = require('http-errors');
+//Imports & Starter
 var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
 var app = express();
+var bodyParser = require('body-parser');
+var cors = require('cors');
+const url = require('url');
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+//config
+app.use(cors());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//Data
+var tasks = [
+    {
+        id: 1,
+        description: 'Steuererklärung ausfüllen',
+        status: "done"
+    },
+    {
+        id: 2,
+        description: 'Auto waschen',
+        status: "undone"
+    },
+    {
+        id: 3,
+        description: 'Haare schneiden',
+        status: "undone"
+    }];
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+//RESTFUL
+//GetAllTasksWithFilter
+app.get('/tasks', function (req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    let filteredTasks = [];
+    let status = url.parse(req.url, true).query.status;
+    if(status == undefined){
+        res.send(JSON.stringify(tasks));
+    }else{
+        for(i = 0; i<tasks.length;i++){
+            if(status == tasks[i].status){
+                filteredTasks.push(tasks[i]);
+            }
+        }
+        res.send(JSON.stringify(filteredTasks));
+    }
+});
+//GetTaskById
+app.get('/tasks/:id', function (req, res) {
+    let id = req.params.id;
+    res.setHeader('Content-Type', 'application/json');
+    if(id>tasks.length) {
+        res.status(404).send({ error: 'Invalid task id' })
+    } else {
+        res.send(JSON.stringify(tasks[id-1]))
+    }
+});
+//PostTask
+app.post('/tasks', function(req, res) {
+    let task = req.body;
+    res.setHeader('Content-Type', 'application/json');
+    tasks.push(task);
+    res.send(JSON.stringify(tasks));
+});
+//DeleteTask
+app.delete('/tasks', function (req, res) {
+    let task = req.body;
+    res.setHeader('Content-Type', 'application/json');
+    for(var i = 0; i<tasks.length;i++){
+        if(tasks[i].id== task.id){
+            tasks.splice(i, 1);
+        }
+    }
+    res.send(JSON.stringify(tasks));
+});
+//PutTask (Change Done true / False)
+app.put('/tasks', function(req, res){
+    let task = req.body;
+    res.setHeader('Content-Type', 'application/json');
+    for (var i = 0; i < tasks.length; i++) {
+        if(task.id==tasks[i].id){
+            tasks[i]=task;
+        }
+    }
+    res.send(JSON.stringify(tasks));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+//Run Server
+const hostname = '127.0.0.1';
+const port = 3000;
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+app.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
-
-module.exports = app;
