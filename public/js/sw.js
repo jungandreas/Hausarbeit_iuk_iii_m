@@ -4,7 +4,7 @@ self.addEventListener('intall', event =>{
         caches.open(cacheName)
             .then(cache => cache.addAll(
                 [
-                    '/html/index.html'
+                    '../html/index.html'
                 ]
             ))
     )
