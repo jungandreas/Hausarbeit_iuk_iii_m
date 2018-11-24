@@ -4,8 +4,16 @@ $(document).ready(showUndoneTasks());
 $("#allTasks").click(function() {
     showAllTasks();
 });
+$("#doneTasks").click(function() {
+    showDoneTasks();
+});
 
-//Alle Tasks fetchen und anzeigen
+$("#undoneTasks").click(function() {
+    showUndoneTasks();
+});
+
+
+//GET ALL: Alle Tasks fetchen und anzeigen
 function showAllTasks(){
     fetch('http://localhost:3000/tasks')
         .then(function(response) {
@@ -13,11 +21,12 @@ function showAllTasks(){
         })
         .then(function(myJson) {
             data = myJson;
+            $('#tasks').empty();
             createTasks(data);
         });
 }
 
-//Offene Tasks fetchen und anzeigen
+//GET UNDONE: Offene Tasks fetchen und anzeigen
 function showUndoneTasks(){
     fetch('http://localhost:3000/tasks?status=undone')
         .then(function(response) {
@@ -25,11 +34,12 @@ function showUndoneTasks(){
         })
         .then(function(myJson) {
             data = myJson;
+            $('#tasks').empty();
             createTasks(data);
         });
 }
 
-//Erledigte Tasks fetchen und anzeigen
+//GET DONE: Erledigte Tasks fetchen und anzeigen
 function showDoneTasks(){
     fetch('http://localhost:3000/tasks?status=done')
         .then(function(response) {
@@ -37,6 +47,7 @@ function showDoneTasks(){
         })
         .then(function(myJson) {
             data = myJson;
+            $('#tasks').empty();
             createTasks(data);
         });
 }
