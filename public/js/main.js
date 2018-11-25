@@ -1,3 +1,5 @@
+const url = 'https://localhost:3000';
+
 //Nur offene Tasks beim Start anzeigen
 $(document).ready(showUndoneTasks());
 //Eventhandler für Filteroptionen
@@ -15,7 +17,7 @@ $("#undoneTasks").click(function() {
 
 //GET ALL: Alle Tasks fetchen und anzeigen
 function showAllTasks(){
-    fetch('http://localhost:3000/tasks')
+    fetch(url+'/tasks')
         .then(function(response) {
             return response.json();
         })
@@ -28,7 +30,7 @@ function showAllTasks(){
 
 //GET UNDONE: Offene Tasks fetchen und anzeigen
 function showUndoneTasks(){
-    fetch('http://localhost:3000/tasks?status=undone')
+    fetch(url+'/tasks?status=undone')
         .then(function(response) {
             return response.json();
         })
@@ -41,7 +43,7 @@ function showUndoneTasks(){
 
 //GET DONE: Erledigte Tasks fetchen und anzeigen
 function showDoneTasks(){
-    fetch('http://localhost:3000/tasks?status=done')
+    fetch(url+'/tasks?status=done')
         .then(function(response) {
             return response.json();
         })
@@ -72,6 +74,35 @@ function createTask(element){
         '</div>';
     return task;
 }
+
+// POST data
+$("#add").click(function() {
+    var descr = $('#input').val();
+    //Abfrage, um ID bestimmen zu können
+    fetch(url+'/tasks')
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(myJson) {
+            data = myJson;
+
+        });
+    var task = {
+        id: data.length + 2,
+        description: descr,
+        status: 'undone'
+    };
+    fetch(url+'/tasks', {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(task)
+    }).then(res=>res.json())
+        .then(res => console.log(res));
+    location.reload();
+});
 
 
 
