@@ -4,8 +4,6 @@ var app = express();
 var bodyParser = require('body-parser');
 var cors = require('cors');
 const url = require('url');
-const fs = require('fs');
-const https = require('https');
 
 //config
 app.use(cors());
@@ -18,17 +16,17 @@ app.use(bodyParser.json());
 //Data
 var tasks = [
     {
-        id: 1,
+        id: 0,
         description: 'Steuererklärung ausfüllen',
         status: "done"
     },
     {
-        id: 2,
+        id: 1,
         description: 'Auto waschen',
         status: "undone"
     },
     {
-        id: 3,
+        id: 2,
         description: 'Haare schneiden',
         status: "undone"
     }];
@@ -90,14 +88,10 @@ app.put('/tasks', function(req, res){
     res.send(JSON.stringify(tasks));
 });
 
-//Keys for HTTPS
-const httpsOptions = {
-    key: fs.readFileSync('server.key'),
-    cert: fs.readFileSync('server.crt')
-}
 //Run Server
 const hostname = '127.0.0.1';
 const port = 3000;
-const server = https.createServer(httpsOptions, app).listen(port,hostname, () => {
-    console.log(`Server running at https://${hostname}:${port}/`);
+
+app.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
