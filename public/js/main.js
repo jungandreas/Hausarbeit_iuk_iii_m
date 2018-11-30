@@ -1,7 +1,7 @@
-const url = 'https://localhost:3000';
-
+const url = 'http://localhost:3000';
+let data = [];
 //Nur offene Tasks beim Start anzeigen
-$(document).ready(showUndoneTasks());
+$(document).ready(getData());
 //Eventhandler für Filteroptionen
 $("#allTasks").click(function() {
     showAllTasks();
@@ -9,53 +9,49 @@ $("#allTasks").click(function() {
 $("#doneTasks").click(function() {
     showDoneTasks();
 });
-
 $("#undoneTasks").click(function() {
     showUndoneTasks();
 });
 
-
-//GET ALL: Alle Tasks fetchen und anzeigen
-function showAllTasks(){
+//Initial GET ALL DATA --> und
+function getData(){
     fetch(url+'/tasks')
         .then(function(response) {
             return response.json();
         })
         .then(function(myJson) {
             data = myJson;
-            $('#tasks').empty();
             createTasks(data);
         });
 }
 
-//GET UNDONE: Offene Tasks fetchen und anzeigen
-function showUndoneTasks(){
-    fetch(url+'/tasks?status=undone')
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(myJson) {
-            data = myJson;
-            $('#tasks').empty();
-            createTasks(data);
-        });
+function showAllTasks() {
+    createTasks(data);
 }
 
-//GET DONE: Erledigte Tasks fetchen und anzeigen
-function showDoneTasks(){
-    fetch(url+'/tasks?status=done')
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(myJson) {
-            data = myJson;
-            $('#tasks').empty();
-            createTasks(data);
-        });
+function showDoneTasks() {
+    let doneData = [];
+    data.forEach(element => {
+        if(element.status == "done"){
+            doneData.push(element);
+        }
+    });
+    createTasks(doneData);
+}
+
+function showUndoneTasks() {
+    let undoneData = [];
+    data.forEach(element => {
+        if(element.status == "undone"){
+            undoneData.push(element);
+        }
+    });
+    createTasks(undoneData);
 }
 
 //Alle Tasks erzeugen, hinzufügen und ggfls. "checked" setzen
 function createTasks(dataInput) {
+    $('#tasks').empty();
     dataInput.forEach(element => {
         var task = createTask(element);
         $('#tasks').append(task);
@@ -78,17 +74,9 @@ function createTask(element){
 // POST data
 $("#add").click(function() {
     var descr = $('#input').val();
-    //Abfrage, um ID bestimmen zu können
-    fetch(url+'/tasks')
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(myJson) {
-            data = myJson;
-
-        });
+    $('#input').val('');
     var task = {
-        id: data.length + 2,
+        id: data.length,
         description: descr,
         status: 'undone'
     };
@@ -100,8 +88,8 @@ $("#add").click(function() {
         },
         body: JSON.stringify(task)
     }).then(res=>res.json())
-        .then(res => console.log(res));
-    location.reload();
+        .then(res => createTasks(res));
+
 });
 
 
