@@ -53,7 +53,7 @@ function showUndoneTasks() {
 function createTasks(dataInput) {
     $('#tasks').empty();
     dataInput.forEach(element => {
-        var task = createTask(element);
+        let task = createTask(element);
         $('#tasks').append(task);
         if(element.status == "done"){
             var taskname = '#task'+element.id;
@@ -64,22 +64,23 @@ function createTasks(dataInput) {
 
 //Einzelner Task erzeugen
 function createTask(element){
-    var task = '<div class="form-check">'+
+    let task = '<div class="form-check">'+
         '<input class="form-check-input" type="checkbox" value="" id="task'+ element.id +'">'+
-        '<label class="form-check-label" for="task'+ element.id +'">'+ element.description +'</label>'+
+        '<label class="form-check-label" id="descr'+ element.id +'">'+ element.description +'</label>'+
         '</div>';
     return task;
 }
 
 // POST data
 $("#add").click(function() {
-    var descr = $('#input').val();
+    let descr = $('#input').val();
     $('#input').val('');
-    var task = {
+    let task = {
         id: data.length,
         description: descr,
         status: 'undone'
     };
+    data.push(task);
     fetch(url+'/tasks', {
         method: 'post',
         headers: {
@@ -89,7 +90,32 @@ $("#add").click(function() {
         body: JSON.stringify(task)
     }).then(res=>res.json())
         .then(res => createTasks(res));
+});
 
+// PUT data
+$(document).on('click', '.form-check-input', function () {
+    let id = this.id.substring(4);
+    let descr = $('#descr'+ id +'').text();
+    let status;
+    if(this.checked){
+       status = "done";
+    }else{
+       status = "undone";
+    }
+    let updatedTask = {
+        id: id,
+        description: descr,
+        status: status
+    }
+    console.log(updatedTask);
+    fetch(url+'/tasks', {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedTask)
+    }).then(res=>res.json());
 });
 
 
