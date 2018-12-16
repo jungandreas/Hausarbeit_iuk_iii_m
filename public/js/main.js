@@ -1,4 +1,4 @@
-const url = 'http://localhost:3000';
+const url = 'https://secure-depths-39695.herokuapp.com';
 let data = [];
 //Nur offene Tasks beim Start anzeigen
 $(document).ready(getData());

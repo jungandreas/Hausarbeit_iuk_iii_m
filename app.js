@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var cors = require('cors');
+var fileSystem = require('fs');
 const url = require('url');
 
 //config
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+app.use('/', express.static(__dirname + '/public/html'));
 
 //Data
 var tasks = [
@@ -89,9 +91,6 @@ app.put('/tasks', function(req, res){
 });
 
 //Run Server
-const hostname = '127.0.0.1';
-const port = 3000;
-
-app.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
