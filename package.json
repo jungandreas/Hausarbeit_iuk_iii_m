@@ -31,6 +31,6 @@
   "root": "public",
   "clean_urls": false,
   "routes": {
-    "/**": "html/index.html"
+    "/**": "/html/index.html"
   }
 }
