@@ -26,5 +26,11 @@
     "url": "https://github.com/jungandreas/Hausarbeit_iuk_iii_m/issues"
   },
   "homepage": "https://github.com/jungandreas/Hausarbeit_iuk_iii_m#readme",
-  "description": ""
+  "description": "",
+
+  "root": "public",
+  "clean_urls": false,
+  "routes": {
+    "/**": "index.html"
+  }
 }
