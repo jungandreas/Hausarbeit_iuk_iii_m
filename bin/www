@@ -13,7 +13,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.use('/static', express.static(__dirname + '/public'));
+//set the template engine ejs
+app.set('view engine', 'ejs');
 
 //Data
 var tasks = [
