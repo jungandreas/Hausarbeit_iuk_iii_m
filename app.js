@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.use('/', express.static(__dirname + '/public/html'));
+app.use('/', express.static(__dirname + '/public/html/index.html'));
 
 //Data
 var tasks = [
