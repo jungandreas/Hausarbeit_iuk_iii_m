@@ -89,8 +89,8 @@ app.put('/tasks', function(req, res){
 });
 
 //Run Server
-const hostname = 'https://secure-depths-39695.herokuapp.com/';
-const port = 80;
+const hostname = 'localhost';
+const port = 5000;
 
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
