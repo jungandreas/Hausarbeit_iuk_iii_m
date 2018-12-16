@@ -107,7 +107,6 @@ $(document).on('click', '.form-check-input', function () {
         description: descr,
         status: status
     }
-    console.log(updatedTask);
     fetch(url+'/tasks', {
         method: 'PUT',
         headers: {
@@ -116,6 +115,7 @@ $(document).on('click', '.form-check-input', function () {
         },
         body: JSON.stringify(updatedTask)
     }).then(res=>res.json());
+    console.log(data);
 });
 
 
