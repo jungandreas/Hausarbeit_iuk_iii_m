@@ -6,6 +6,7 @@ var cors = require('cors');
 var fileSystem = require('fs');
 const url = require('url');
 
+
 //config
 app.use(cors());
 app.use(bodyParser.urlencoded({
@@ -35,6 +36,13 @@ var tasks = [
     }];
 
 //RESTFUL
+// GET HTML
+app.get('/', function (req, res) {
+    res.setHeader('Content-Type', 'text/html');
+    res.sendfile(__dirname+'/public/html/index.html');
+
+})
+
 //GetAllTasksWithFilter
 app.get('/tasks', function (req, res) {
     res.setHeader('Content-Type', 'application/json');
@@ -95,8 +103,8 @@ app.put('/tasks', function(req, res){
 const hostname = 'todolistgianandreas.herokuapp.com';
 const port = 3000;
 
-app.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-//app.listen(process.env.PORT || 3000, function(){
-   // console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+//app.listen(port, hostname, () => {
+    //console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
