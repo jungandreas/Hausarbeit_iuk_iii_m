@@ -35,6 +35,13 @@ var tasks = [
     }];
 
 //RESTFUL
+// GET HTML
+app.get('/', function (req, res) {
+    res.setHeader('Content-Type', 'text/html');
+    res.sendfile(__dirname+'/public/html/index.html');
+
+})
+
 //GetAllTasksWithFilter
 app.get('/tasks', function (req, res) {
     res.setHeader('Content-Type', 'application/json');
