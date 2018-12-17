@@ -1,109 +1,47 @@
-//Imports & Starter
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var cors = require('cors');
-const url = require('url');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
 
+let indexRouter = require('./routes/index');
 
-//config
-app.use(cors());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());
+let app = express();
 
-//Data
-var tasks = [
-    {
-        id: 0,
-        description: 'Steuererklärung ausfüllen',
-        status: "done"
-    },
-    {
-        id: 1,
-        description: 'Auto waschen',
-        status: "undone"
-    },
-    {
-        id: 2,
-        description: 'Haare schneiden',
-        status: "undone"
-    }];
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
-//RESTFUL
-//GET Homepage
-app.get('/', function(req, res, next) {
-    let options = { root: __dirname + '/public/' };
-    let fileName = 'index.html';
-    res.sendFile(fileName, options, function(err) {
-        if (err) next(err);
-        else console.log('Sent:', fileName);
-    });
+app.use(logger('dev'));
+app.use(express.json()); // tell express to middleware for json
+app.use(
+    express.urlencoded({
+        extended: false,
+    })
+);
+app.use(cookieParser());
+
+//app.use(express.static(path.join(__dirname, 'public')));
+
+// middleware for static files => localhost:3000/static/public-folder-contents
+app.use('/static', express.static('public'));
+
+app.use('/', indexRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    next(createError(404));
 });
 
-//GetAllTasksWithFilter
-app.get('/tasks', function (req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    let filteredTasks = [];
-    let status = url.parse(req.url, true).query.status;
-    if(status == undefined){
-        res.send(JSON.stringify(tasks));
-    }else{
-        for(i = 0; i<tasks.length;i++){
-            if(status == tasks[i].status){
-                filteredTasks.push(tasks[i]);
-            }
-        }
-        res.send(JSON.stringify(filteredTasks));
-    }
-});
-//GetTaskById
-app.get('/tasks/:id', function (req, res) {
-    let id = req.params.id;
-    res.setHeader('Content-Type', 'application/json');
-    if(id>tasks.length) {
-        res.status(404).send({ error: 'Invalid task id' })
-    } else {
-        res.send(JSON.stringify(tasks[id-1]))
-    }
-});
-//PostTask
-app.post('/tasks', function(req, res) {
-    let task = req.body;
-    res.setHeader('Content-Type', 'application/json');
-    tasks.push(task);
-    res.send(JSON.stringify(tasks));
-});
-//DeleteTask
-app.delete('/tasks', function (req, res) {
-    let task = req.body;
-    res.setHeader('Content-Type', 'application/json');
-    for(var i = 0; i<tasks.length;i++){
-        if(tasks[i].id== task.id){
-            tasks.splice(i, 1);
-        }
-    }
-    res.send(JSON.stringify(tasks));
-});
-//PutTask (Change Done true / False)
-app.put('/tasks', function(req, res){
-    let task = req.body;
-    res.setHeader('Content-Type', 'application/json');
-    for (var i = 0; i < tasks.length; i++) {
-        if(task.id==tasks[i].id){
-            tasks[i]=task;
-        }
-    }
-    res.send(JSON.stringify(tasks));
+// error handler
+app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
-//Run Server
-const hostname = 'todolistgianandreas.herokuapp.com';
-const port = 3000;
-
-//app.listen(port, hostname, () => {
-    //console.log(`Server running at http://${hostname}:${port}/`);
-app.listen(process.env.PORT || 3000, function(){
-    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-});
+module.exports = app;
