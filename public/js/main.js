@@ -1,4 +1,4 @@
-const url = 'http://localhost:3000';
+const url = 'https://secure-depths-39695.herokuapp.com';
 let data = [];
 //Nur offene Tasks beim Start anzeigen
 $(document).ready(getData());
@@ -107,7 +107,6 @@ $(document).on('click', '.form-check-input', function () {
         description: descr,
         status: status
     }
-    console.log(updatedTask);
     fetch(url+'/tasks', {
         method: 'PUT',
         headers: {
@@ -116,6 +115,7 @@ $(document).on('click', '.form-check-input', function () {
         },
         body: JSON.stringify(updatedTask)
     }).then(res=>res.json());
+    console.log(data);
 });
 
 
