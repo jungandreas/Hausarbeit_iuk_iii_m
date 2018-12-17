@@ -3,7 +3,6 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var fileSystem = require('fs');
 const url = require('url');
 
 
@@ -33,12 +32,15 @@ var tasks = [
     }];
 
 //RESTFUL
-// GET HTML
-app.get('/', function (req, res) {
-    res.setHeader('Content-Type', 'text/html');
-    res.sendfile(__dirname+'/public/html/index.html');
-
-})
+//GET Homepage
+app.get('/', function(req, res, next) {
+    let options = { root: __dirname + '/public/' };
+    let fileName = 'index.html';
+    res.sendFile(fileName, options, function(err) {
+        if (err) next(err);
+        else console.log('Sent:', fileName);
+    });
+});
 
 //GetAllTasksWithFilter
 app.get('/tasks', function (req, res) {
