@@ -14,9 +14,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-//set the template engine ejs
-app.set('view engine', 'ejs');
-
 //Data
 var tasks = [
     {
