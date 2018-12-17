@@ -13,7 +13,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json()); // tell express to middleware for json
+app.use(express.json());
 app.use(
     express.urlencoded({
         extended: false,
@@ -21,9 +21,7 @@ app.use(
 );
 app.use(cookieParser());
 
-//app.use(express.static(path.join(__dirname, 'public')));
-
-// middleware for static files => localhost:3000/static/public-folder-contents
+// middleware for static files
 app.use('/static', express.static('public'));
 
 app.use('/', indexRouter);
