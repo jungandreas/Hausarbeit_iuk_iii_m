@@ -1,4 +1,5 @@
-const url = 'https://secure-depths-39695.herokuapp.com';
+//const url = 'https://secure-depths-39695.herokuapp.com';
+const url = 'https://todolistgianandreas.herokuapp.com/'
 let data = [];
 //Nur offene Tasks beim Start anzeigen
 $(document).ready(getData());
