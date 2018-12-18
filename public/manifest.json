@@ -6,7 +6,7 @@
   "theme_color": "#FFDF00",
   "background_color": "#FFCCFF",
   "icons":[{
-    "src": "static/images/test_icon.png",
+    "src": "images/test_icon.png",
     "sizes": "192x192",
     "type": "image/png"
   }]
