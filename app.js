@@ -22,8 +22,8 @@ app.use(
 app.use(cookieParser());
 
 // middleware for static files
-app.use('/static', express.static('public'));
-
+//app.use('/static', express.static('public'));
+app.use(express.static('public'));
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
