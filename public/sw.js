@@ -5,7 +5,8 @@ self.addEventListener('install', event => {
         caches.open(cacheName)
             .then(cache => cache.addAll([
                 'stylesheets/style.css',
-                'html/index.html'
+                'html/index.html',
+                'js/main.js'
             ]))
     );
 });
@@ -14,9 +15,6 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request, { ignoreSearch: true })
             .then(function(response) {
-                if (response) {
-                    return response;
-                }
                 var requestToCache = event.request.clone();
                 return fetch(requestToCache).then(
                     function(response) {
@@ -30,6 +28,9 @@ self.addEventListener('fetch', event => {
                             });
                         return response;
                     });
+                if (response) {
+                    return response;
+                }
             })
     );
 });
