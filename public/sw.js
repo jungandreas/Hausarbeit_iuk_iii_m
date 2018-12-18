@@ -6,7 +6,8 @@ self.addEventListener('install', event => {
             .then(cache => cache.addAll([
                 'stylesheets/style.css',
                 'html/index.html',
-                'js/main.js'
+                'js/main.js',
+                'manifest.json'
             ]))
     );
 });
