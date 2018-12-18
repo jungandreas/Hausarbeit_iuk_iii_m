@@ -1,9 +1,10 @@
 {
   "name": "Todo List Web Application",
   "short_name": "Todo List",
-  "start_url": "/html/index.html",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#FFDF00",
+  "background_color": "#FFCCFF",
   "icons":[{
     "src": "images/test_icon.png",
     "sizes": "192x192",
