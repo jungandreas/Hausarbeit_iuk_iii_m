@@ -133,8 +133,13 @@ window.addEventListener('online',  updateOnlineStatus);
 window.addEventListener('offline', updateOnlineStatus);
 function updateOnlineStatus() {
     let footer = $('#connectedMessage');
-    let condition = navigator.onLine ? "online" : "offline";
-    footer.text("You're "+condition);
+    let condition = navigator.onLine ? "Online" : "Offline";
+    if(condition == "Online"){
+        footer.text(condition+": Your Data are synchronized");
+    }else{
+        footer.text(condition+": Your Data will be synchronized as soon as you're online again");
+    }
+
 }
 
 
