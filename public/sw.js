@@ -93,7 +93,7 @@ self.addEventListener('sync', (event) => {
                         method: 'POST',
                         headers: new Headers({ 'content-type': 'application/json' }),
                         body: JSON.stringify(value)
-                    }));
+                    }).then(console.log("synchronised")));
                 }
                 else if (/pushTask/) {
                     idbKeyval.get(key).then(value =>

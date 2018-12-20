@@ -1,6 +1,6 @@
 //const url = 'https://secure-depths-39695.herokuapp.com';
-//const url = 'https://todolistgianandreas.herokuapp.com/';
-const url = 'http://localhost:3000';
+const url = 'https://todolistgianandreas.herokuapp.com/';
+//const url = 'http://localhost:3000';
 
 let data = [];
 //Nur offene Tasks beim Start anzeigen
@@ -111,20 +111,20 @@ $("#add").click(function() {
         status: 'undone'
     };
     data.push(task);
-    if ('serviceWorker' in navigator && 'SyncManager' in window){
-        idbKeyval.set('/postTask', task);
-    }
-    else {
-        fetch(url+'/tasks', {
-            method: 'post',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(task)
-        }).then(res=>res.json())
-    .then(res => createTasks(res));
-    }
+    fetch(url+'/tasks', {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(task)
+    }).then(res=>res.json()).catch(error => {
+        if('serviceWorker' in navigator && 'SyncManager' in window && typeof (Storage) !== "undifend") {
+            idbKeyval.set('postTask', task);
+        }
+    })
+.then(res => createTasks(data));
+
 });
 
 //Change Annotation Online / Offline
