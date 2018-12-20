@@ -1,6 +1,6 @@
 const cacheName = 'todoListCache';
 const offlineURL = 'index.html';
-importScripts('./js/idb-keyval.js');
+self.importScripts('js/idb-keyval.js');
 
 self.addEventListener('fetch', function(event) {
     //slow connection
