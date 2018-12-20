@@ -1,6 +1,6 @@
 const cacheName = 'todoListCache';
 const offlineURL = 'index.html';
-
+importScripts('./js/idb-keyval.js');
 
 self.addEventListener('fetch', function(event) {
     //slow connection
@@ -66,21 +66,51 @@ self.addEventListener('sync', (event) => {
     var put = [];
     var remove = [];
 
-    if (event.tag === 'new-tasks') {
+    if (event.tag === 'tasks') {
         let promis = idbKeyval.keys();
         promis.then( (keys) => {
-
-        }
-
-        )
+            for(let key of keys){
+                if (/postTask/) {
+                    post.push(key);
+                }
+                else if (/pushTask/) {
+                    put.push(key);
+                }
+                else if (/delete/){
+                    remove.push(key);
+                }
+            }
+            // put priority order highest post => lowest delete
+            let prioriestKeys = post.concat(put, remove);
+            for (let key of prioriestKeys) {
+                if (/postTask/) {
+                    idbKeyval.get(key).then(value =>
+                    fetch('/tasks', {
+                        method: 'POST',
+                        headers: new Headers({ 'content-type': 'application/json' }),
+                        body: JSON.stringify(value)
+                    }));
+                }
+                else if (/pushTask/) {
+                    idbKeyval.get(key).then(value =>
+                    fetch('/tasks', {
+                        method: 'PUSH',
+                        headers: new Headers({ 'content-type': 'application/json' }),
+                        body: JSON.stringify(value)
+                    }));
+                }
+                else if (/delete/){
+                    idbKeyval.get(key).then(value =>
+                    fetch('/tasks', {
+                        method: 'DELETE',
+                        headers: new Headers({ 'content-type': 'application/json' }),
+                        body: JSON.stringify(value)
+                    }));
+                }
+            }
+        idbKeyval.delete('sendMessage');
+        });
     }
-    event.waitUntil(
-        idbKeyval.get('sendMessage').then(value =>
-        fetch('/sendMessage/', {
-            method: 'POST',
-            headers: new Headers({ 'content-type': 'application/json' }),
-            body: JSON.stringify(value)
-        })));
     idbKeyval.delete('sendMessage');
 });
 
