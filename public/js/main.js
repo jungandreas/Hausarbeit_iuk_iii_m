@@ -101,6 +101,32 @@ $(document).on('click', '.form-check-input', function () {
     console.log(data);
 });
 
+// POST data
+$("#add").click(function() {
+    let descr = $('#input').val();
+    $('#input').val('');
+    let task = {
+        id: data.length,
+        description: descr,
+        status: 'undone'
+    };
+    data.push(task);
+    if ('serviceWorker' in navigator && 'SyncManager' in window){
+        idbKeyval.set('/postTask', task);
+    }
+    else {
+        fetch(url+'/tasks', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(task)
+        }).then(res=>res.json())
+    .then(res => createTasks(res));
+    }
+});
+
 //Change Annotation Online / Offline
 updateOnlineStatus();
 window.addEventListener('online',  updateOnlineStatus);
