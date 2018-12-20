@@ -61,74 +61,27 @@ self.addEventListener('install', event => {
     );
 });
 
-self.addEventListener('sync', event => {
-    if (event.tag === 'needSync') {
-        let promise = idbKeyval.keys();
-        promise.then((keys) => {
-            let posts = [];
-            let puts = [];
-            let deletes = [];
-            for(let k of keys){
-                if (/sendTask/.test(k)) {
-                    posts.push(k);
-                }else if(/updateTask/.test(k)){
-                     puts.push(k);
-                }else if((/deleteTask/.test(k))){
-                    deletes.push(k);
-                }
-            }
-            let sortedKeys = posts.concat( puts, deletes);
-            for (let sortedKey of sortedKeys) {
-                if (/sendTask/.test(sortedKey)) {
-                    idbKeyval.get(sortedKey).then((value) => {
-                        fetch('/tasks', {
-                            method: 'POST',
-                            headers: new Headers({
-                                'content-type': 'application/json'}),
-                            body: JSON.stringify(value)
-                        }).then((response) => {
-                            console.log("POST sync successful");
-                        }).catch(err=>{
-                            console.log("POST sync failed");
-                        });
-                    });
-                    idbKeyval.delete(sortedKey);
-                }
-                else if (/updateTask/.test(sortedKey)) {
-                    idbKeyval.get(sortedKey).then((value) => {
-                        let updatedTask = {
-                            "description": value.description,
-                            "category": value.category
-                        };
-                        fetch('/tasks', {
-    					    method: 'PUT',
-    					    headers: {
-	    			    		'content-type': 'application/json'
-		    	    		},
-			        		body: JSON.stringify(updatedTask)
-		    		    }).then((response) => {
-	    				    console.log("PUT sync successful");
-        				}).catch(err=>{
-	    				    console.log("PUT sync failed");
-		    		    });
-                    });
-                    idbKeyval.delete(sortedKey);
-                }
-                else if (/deleteTask/.test(sortedKey)) {
-                    idbKeyval.get(sortedKey).then(() => {
-                        fetch('/tasks, {
-                            method: 'DELETE'
-                        }).then((response) => {
-                            console.log("DELETE sync successful");
-                        }).catch(err=>{
-                            console.log("DELETE sync failed");
-                        });
-                    });
-                    idbKeyval.delete(sortedKey);
-                }
-            }
-        });
+self.addEventListener('sync', (event) => {
+    var post = [];
+    var put = [];
+    var remove = [];
+
+    if (event.tag === 'new-tasks') {
+        let promis = idbKeyval.keys();
+        promis.then( (keys) => {
+
+        }
+
+        )
     }
+    event.waitUntil(
+        idbKeyval.get('sendMessage').then(value =>
+        fetch('/sendMessage/', {
+            method: 'POST',
+            headers: new Headers({ 'content-type': 'application/json' }),
+            body: JSON.stringify(value)
+        })));
+    idbKeyval.delete('sendMessage');
 });
 
 //check network speed if slow take cache
