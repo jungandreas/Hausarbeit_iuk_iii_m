@@ -121,6 +121,16 @@ $(document).on('click', '.form-check-input', function () {
     console.log(data);
 });
 
+//Change Annotation Online / Offline
+updateOnlineStatus();
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+function updateOnlineStatus() {
+    let footer = $('#connectedMessage');
+    let condition = navigator.onLine ? "online" : "offline";
+    footer.text("You're "+condition);
+}
+
 
 
 
