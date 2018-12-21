@@ -6,17 +6,17 @@ var router = express.Router();
 //Data
 var tasks = [
     {
-        id: 0,
+        id: '0',
         description: 'Steuererklärung ausfüllen',
         status: "done"
     },
     {
-        id: 1,
+        id: '1',
         description: 'Auto waschen',
         status: "undone"
     },
     {
-        id: 2,
+        id: '2',
         description: 'Haare schneiden',
         status: "undone"
     }];
