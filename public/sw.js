@@ -1,11 +1,12 @@
 const cacheName = 'todoListCache';
 const offlineURL = 'index.html';
 
+//import script for idb-keyval
 if( 'function' === typeof importScripts) {
     importScripts('./js/idb-keyval.js');
 }
 
-
+// intercept fetch Events
 self.addEventListener('fetch', function(event) {
     //slow connection
     if (/googleapis/.test(event.request.url)) {
@@ -17,12 +18,13 @@ self.addEventListener('fetch', function(event) {
         if (response && (!navigator.onLine)) {
             return response;
         }
-
+        //clone request for cache
         var request = event.request.clone();
         return fetch(request).then( function (response) {
             if (!response || response.status !== 200) {
                 return response;
             }
+            //clone response for cache
             var responseCache = response.clone();
             caches.open(cacheName).then(function (cache) {
                 if (event.request.method === 'GET') {
@@ -30,7 +32,7 @@ self.addEventListener('fetch', function(event) {
                 }
             });
             return response;
-        }).catch(error => {
+        }).catch(error => { //chatch errors and print them to the console
             if (event.request.method === 'POST' || event.request.method === 'PUT' || event.request.method === 'DELETE') {
                 return new Response({
                     "status": 200,
@@ -62,11 +64,12 @@ self.addEventListener('install', event => {
     );
 });
 
+//synchronise post, put and delete Events with the Backend after connections Lost
 self.addEventListener('sync', (event) => {
     var post = [];
     var put = [];
     var remove = [];
-
+    // check if its the right syncEvent
     if (event.tag === 'tasks') {
         let promis = idbKeyval.keys();
         promis.then( (keys) => {
