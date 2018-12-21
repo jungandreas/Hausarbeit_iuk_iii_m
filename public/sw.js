@@ -29,7 +29,7 @@ self.addEventListener('fetch', function(event) {
                     cache.put(event.request, responseCache)
                 }
                 else if (event.request.method === 'POST' || event.request.method === 'PUT'|| event.request.method === 'DELETE') {
-
+                    caches.open(chacheName)
                 }
             });
             return response;
@@ -77,7 +77,7 @@ self.addEventListener('sync', (event) => {
                 if (/postTask/) {
                     post.push(key);
                 }
-                else if (/pushTask/) {
+                else if (/putTask/) {
                     put.push(key);
                 }
                 else if (/delete/){
@@ -95,10 +95,10 @@ self.addEventListener('sync', (event) => {
                         body: JSON.stringify(value)
                     }).then(console.log("synchronised")));
                 }
-                else if (/pushTask/) {
+                else if (/putTask/) {
                     idbKeyval.get(key).then(value =>
                     fetch('/tasks', {
-                        method: 'PUSH',
+                        method: 'PUT',
                         headers: new Headers({ 'content-type': 'application/json' }),
                         body: JSON.stringify(value)
                     }));
