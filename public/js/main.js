@@ -1,11 +1,11 @@
-//const url = 'https://secure-depths-39695.herokuapp.com';
+//URL to fetch
 const url = 'https://todolistgianandreas.herokuapp.com';
-//const url = 'http://localhost:3000';
+
 
 let data = [];
-//Nur offene Tasks beim Start anzeigen
+//Show all tasks at the beginning
 $(document).ready(getData());
-//Eventhandler für Filteroptionen
+//Eventhandler for Filter options
 $("#allTasks").click(function() {
     showAllTasks();
 });
@@ -16,7 +16,7 @@ $("#undoneTasks").click(function() {
     showUndoneTasks();
 });
 
-//Initial GET ALL DATA --> und
+//Initial GET ALL DATA
 function getData(){
     fetch(url+'/tasks')
         .then(function(response) {
@@ -28,10 +28,10 @@ function getData(){
         });
 }
 
+//Functions for Event Handler of Filter options
 function showAllTasks() {
     createTasks(data);
 }
-
 function showDoneTasks() {
     let doneData = [];
     data.forEach(element => {
@@ -41,7 +41,6 @@ function showDoneTasks() {
     });
     createTasks(doneData);
 }
-
 function showUndoneTasks() {
     let undoneData = [];
     data.forEach(element => {
@@ -52,7 +51,7 @@ function showUndoneTasks() {
     createTasks(undoneData);
 }
 
-//Alle Tasks erzeugen, hinzufügen und ggfls. "checked" setzen
+//Create HTML for tasks, add them to the DOM
 function createTasks(dataInput) {
     $('#tasks').empty();
     dataInput.forEach(element => {
@@ -65,7 +64,7 @@ function createTasks(dataInput) {
     })
 }
 
-//Einzelner Task erzeugen
+//Create single Task
 function createTask(element){
     let task = '<div class="form-check">'+
         '<input class="form-check-input" type="checkbox" value="" id="task'+ element.id +'">'+
@@ -110,7 +109,7 @@ $(document).on('click', '.form-check-input', function () {
     console.log(data);
 });
 
-// POST data
+// Run Post Data with eventlistener for Enter-Key
 $("#add").click(function() {
     postData();
 });
@@ -137,6 +136,7 @@ function updateOnlineStatus() {
 
 }
 
+//POST Data
 function postData() {
     let descr = $('#input').val();
     $('#input').val('');
