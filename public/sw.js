@@ -109,10 +109,9 @@ self.addEventListener('sync', (event) => {
                     }));
                 }
             }
-        idbKeyval.delete('sendMessage');
+        idbKeyval.delete(key);
         });
     }
-    idbKeyval.delete('sendMessage');
 });
 
 //check network speed if slow take cache
