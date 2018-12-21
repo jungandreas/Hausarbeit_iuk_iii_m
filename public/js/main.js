@@ -98,7 +98,7 @@ $(document).on('click', '.form-check-input', function () {
     fetch(url+'/tasks', {
         method: 'PUT',
         headers: {
-            'Accept': 'application/json, text/plain, */*',
+            'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(updatedTask)
