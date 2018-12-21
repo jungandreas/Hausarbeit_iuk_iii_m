@@ -108,8 +108,8 @@ self.addEventListener('sync', (event) => {
                         body: JSON.stringify(value)
                     }));
                 }
+                idbKeyval.delete(key);
             }
-        idbKeyval.delete(key);
         });
     }
 });
