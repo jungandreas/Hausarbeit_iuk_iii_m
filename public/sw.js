@@ -9,7 +9,7 @@ if( 'function' === typeof importScripts) {
 self.addEventListener('fetch', function(event) {
     //slow connection
     if (/googleapis/.test(event.request.url)) {
-        return event.respondWith(Promise.race([timeout(250),fetch(event.request.url)]));
+        return event.respondWith(Promise.race([timeout(500),fetch(event.request.url)]));
     }
     // Page offline cache, online Network
     event.respondWith(caches.match(event.request).then(function (response) {
@@ -26,10 +26,7 @@ self.addEventListener('fetch', function(event) {
             var responseCache = response.clone();
             caches.open(cacheName).then(function (cache) {
                 if (event.request.method === 'GET') {
-                    cache.put(event.request, responseCache)
-                }
-                else if (event.request.method === 'POST' || event.request.method === 'PUT'|| event.request.method === 'DELETE') {
-                    caches.open(chacheName)
+                    cache.put(event.request, responseCache);
                 }
             });
             return response;
