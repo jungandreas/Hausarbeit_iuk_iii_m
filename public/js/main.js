@@ -105,6 +105,11 @@ $(document).on('click', '.form-check-input', function () {
 $("#add").click(function() {
     let descr = $('#input').val();
     $('#input').val('');
+    if ('serviceWorker' in navigator && 'SyncManager' in window) {
+        navigator.serviceWorker.getRegistration().then(registration => {
+            registration.sync.register('tasks');
+        });
+    }
     let task = {
         id: data.length,
         description: descr,
@@ -119,7 +124,7 @@ $("#add").click(function() {
         },
         body: JSON.stringify(task)
     }).then(res=>res.json()).catch(error => {
-        if('serviceWorker' in navigator && 'SyncManager' in window && typeof (Storage) !== "undifend") {
+        if('serviceWorker' in navigator && 'SyncManager' in window && typeof (Storage) !== "undefined") {
             idbKeyval.set('postTask', task);
         }
     })
