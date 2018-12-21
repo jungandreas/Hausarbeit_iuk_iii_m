@@ -112,12 +112,38 @@ $(document).on('click', '.form-check-input', function () {
 
 // POST data
 $("#add").click(function() {
+    postData();
+});
+document.querySelector('#input').addEventListener('keypress', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+        postData();
+    }
+});
+
+
+//Change Annotation Online / Offline
+updateOnlineStatus();
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+function updateOnlineStatus() {
+    let footer = $('#connectedMessage');
+    let condition = navigator.onLine ? "Online" : "Offline";
+    if(condition == "Online"){
+        footer.text(condition+": Your Data are synchronized");
+    }else{
+        footer.text(condition+": Your Data will be synchronized as soon as you're online again");
+    }
+
+}
+
+function postData() {
     let descr = $('#input').val();
     $('#input').val('');
     if ('serviceWorker' in navigator && 'SyncManager' in window) {
         navigator.serviceWorker.getRegistration().then(registration => {
             registration.sync.register('tasks');
-        });
+    });
     }
     let task = {
         id: data.length.toString(),
@@ -134,27 +160,11 @@ $("#add").click(function() {
         body: JSON.stringify(task)
     }).then(res=>res.json()).catch(error => {
         if('serviceWorker' in navigator && 'SyncManager' in window && typeof (Storage) !== "undefined") {
-            idbKeyval.set('postTask'+data.length.toString(), task);
-        }
-    })
+        idbKeyval.set('postTask'+data.length.toString(), task);
+    }
+})
 .then(res => createTasks(data));
     console.log(data);
-
-});
-
-//Change Annotation Online / Offline
-updateOnlineStatus();
-window.addEventListener('online',  updateOnlineStatus);
-window.addEventListener('offline', updateOnlineStatus);
-function updateOnlineStatus() {
-    let footer = $('#connectedMessage');
-    let condition = navigator.onLine ? "Online" : "Offline";
-    if(condition == "Online"){
-        footer.text(condition+": Your Data are synchronized");
-    }else{
-        footer.text(condition+": Your Data will be synchronized as soon as you're online again");
-    }
-
 }
 
 
