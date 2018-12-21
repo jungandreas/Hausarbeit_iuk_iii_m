@@ -85,6 +85,11 @@ $(document).on('click', '.form-check-input', function () {
     }else{
        status = "undone";
     }
+    if ('serviceWorker' in navigator && 'SyncManager' in window) {
+        navigator.serviceWorker.getRegistration().then(registration => {
+            registration.sync.register('tasks');
+        });
+    }
     let updatedTask = {
         id: id,
         description: descr,
@@ -97,7 +102,11 @@ $(document).on('click', '.form-check-input', function () {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(updatedTask)
-    }).then(res=>res.json());
+    }).then(res=>res.json()).catch(error => {
+        if('serviceWorker' in navigator && 'SyncManager' in window && typeof (Storage) !== "undefined") {
+            idbKeyval.set('putTask', updatedTask);
+        }
+    });
     console.log(data);
 });
 
