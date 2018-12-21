@@ -14,7 +14,7 @@ self.addEventListener('fetch', function(event) {
     // Page offline cache, online Network
     event.respondWith(caches.match(event.request).then(function (response) {
         //check if client online, if online network else cache
-        if (response && (!/api\/tasks/.test(response.url) || !navigator.onLine)) {
+        if (response && (!navigator.onLine)) {
             return response;
         }
 
