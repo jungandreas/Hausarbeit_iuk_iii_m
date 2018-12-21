@@ -138,6 +138,7 @@ $("#add").click(function() {
         }
     })
 .then(res => createTasks(data));
+    console.log(data);
 
 });
 
