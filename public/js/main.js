@@ -104,7 +104,7 @@ $(document).on('click', '.form-check-input', function () {
         body: JSON.stringify(updatedTask)
     }).then(res=>res.json()).catch(error => {
         if('serviceWorker' in navigator && 'SyncManager' in window && typeof (Storage) !== "undefined") {
-            idbKeyval.set('putTask', updatedTask);
+            idbKeyval.set('putTask'+id, updatedTask);
         }
     });
     console.log(data);
@@ -134,7 +134,7 @@ $("#add").click(function() {
         body: JSON.stringify(task)
     }).then(res=>res.json()).catch(error => {
         if('serviceWorker' in navigator && 'SyncManager' in window && typeof (Storage) !== "undefined") {
-            idbKeyval.set('postTask', task);
+            idbKeyval.set('postTask'+data.length.toString(), task);
         }
     })
 .then(res => createTasks(data));

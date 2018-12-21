@@ -71,20 +71,20 @@ self.addEventListener('sync', (event) => {
         let promis = idbKeyval.keys();
         promis.then( (keys) => {
             for(let key of keys){
-                if (/postTask/) {
+                if (/postTask/.test(key)) {
                     post.push(key);
                 }
-                else if (/putTask/) {
+                else if (/putTask/.test(key)) {
                     put.push(key);
                 }
-                else if (/delete/){
+                else if (/delete/.test(key)){
                     remove.push(key);
                 }
             }
             // put priority order highest post => lowest delete
             let prioriestKeys = post.concat(put, remove);
             for (let key of prioriestKeys) {
-                if (/postTask/) {
+                if (/postTask/.test(key)) {
                     idbKeyval.get(key).then(value =>
                     fetch('/tasks', {
                         method: 'POST',
@@ -92,7 +92,7 @@ self.addEventListener('sync', (event) => {
                         body: JSON.stringify(value)
                     }).then(console.log("synchronised")));
                 }
-                else if (/putTask/) {
+                else if (/putTask/.test(key)) {
                     idbKeyval.get(key).then(value =>
                     fetch('/tasks', {
                         method: 'PUT',
@@ -100,7 +100,7 @@ self.addEventListener('sync', (event) => {
                         body: JSON.stringify(value)
                     }));
                 }
-                else if (/delete/){
+                else if (/delete/.test(key)){
                     idbKeyval.get(key).then(value =>
                     fetch('/tasks', {
                         method: 'DELETE',
