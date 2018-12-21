@@ -68,7 +68,7 @@ function createTasks(dataInput) {
 //Einzelner Task erzeugen
 function createTask(element){
     let task = '<div class="form-check">'+
-        '<input class="form-check-input" type="checkbox" value="" id="task'+ element.id +'">'+
+        '<input class="form-check-input" type="checkbox" value="" id="'+ element.id +'">'+
         '<label class="form-check-label" id="descr'+ element.id +'">'+ element.description +'</label>'+
         '</div>';
     return task;
@@ -77,7 +77,7 @@ function createTask(element){
 
 // PUT data
 $(document).on('click', '.form-check-input', function () {
-    let id = this.id.substring(4);
+    let id = this.id;
     let descr = $('#descr'+ id +'').text();
     let status;
     if(this.checked){
