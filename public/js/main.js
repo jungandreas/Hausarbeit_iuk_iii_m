@@ -84,7 +84,9 @@ $(document).on('click', '.form-check-input', function () {
     }else{
        status = "undone";
     }
+    //checks for ServiceWorker so that it has a fallback if there is no ServiceWorker
     if ('serviceWorker' in navigator && 'SyncManager' in window) {
+        //register sync Event that fires as soon as i have a connection
         navigator.serviceWorker.getRegistration().then(registration => {
             registration.sync.register('tasks');
         });
@@ -94,6 +96,7 @@ $(document).on('click', '.form-check-input', function () {
         description: descr,
         status: status
     }
+    //put the data
     fetch(url+'/tasks', {
         method: 'PUT',
         headers: {
@@ -102,6 +105,7 @@ $(document).on('click', '.form-check-input', function () {
         },
         body: JSON.stringify(updatedTask)
     }).then(res=>res.json()).catch(error => {
+        //if there is no connection but a service worker and a sync manager it will send as soon as possible
         if('serviceWorker' in navigator && 'SyncManager' in window && typeof (Storage) !== "undefined") {
             idbKeyval.set('putTask'+id, updatedTask);
         }
@@ -140,7 +144,9 @@ function updateOnlineStatus() {
 function postData() {
     let descr = $('#input').val();
     $('#input').val('');
+    //checks for ServiceWorker so that it has a fallback if there is no ServiceWorker
     if ('serviceWorker' in navigator && 'SyncManager' in window) {
+        //register sync Event that fires as soon as i have a connection
         navigator.serviceWorker.getRegistration().then(registration => {
             registration.sync.register('tasks');
     });
@@ -151,6 +157,7 @@ function postData() {
         status: 'undone'
     };
     data.push(task);
+    //post the data
     fetch(url+'/tasks', {
         method: 'post',
         headers: {
@@ -159,6 +166,7 @@ function postData() {
         },
         body: JSON.stringify(task)
     }).then(res=>res.json()).catch(error => {
+        //if there is no connection but a service worker and a sync manager it will send as soon as possible
         if('serviceWorker' in navigator && 'SyncManager' in window && typeof (Storage) !== "undefined") {
         idbKeyval.set('postTask'+data.length.toString(), task);
     }
